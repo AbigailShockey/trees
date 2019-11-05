@@ -53,17 +53,17 @@ df = df.transpose()
 df.to_csv(f"{matrixFile_handle}_transposed.tsv", sep=',', encoding='utf-8')
 
 # calculate hamming distance matrix
-pdm = pd.DataFrame(
+hdm = pd.DataFrame(
     squareform(pdist(df, metric = 'hamming')),
     columns = df.index,
     index = df.index)
 
 # write hamming ditance matrix to file
-pdm.to_csv(matrixFile, sep='\t', encoding='utf-8')
+hdm.to_csv(matrixFile, sep='\t', encoding='utf-8')
 
 # read hamming distance matrix in as phylogenetic distance matrix
 with open(matrixFile) as src:
-    pdm_phy = dendropy.PhylogeneticDistanceMatrix.from_csv(
+    pdm = dendropy.PhylogeneticDistanceMatrix.from_csv(
             src,
             is_first_row_column_names=True,
             is_first_column_row_names=True,
@@ -71,7 +71,7 @@ with open(matrixFile) as src:
             delimiter="\t")
 
 # Calculate neighbor-joining tree from phylogenetic distance matrix and write to file
-nj_tree = pdm_phy.nj_tree()
+nj_tree = pdm.nj_tree()
 nj_tree.write(
     path=treeFile,
     schema="newick")
@@ -87,12 +87,12 @@ if args.b is not None:
         # Randomly re-order rows (see "jumble" option in boot.phylo function from R package ape)
         rdf = rdf.sample(frac=1, replace=False)
         # Calculate hamming distance matrix from permuted matrix
-        rpdm = pd.DataFrame(
+        rhdm = pd.DataFrame(
             squareform(pdist(rdf, metric = 'hamming')),
             columns = rdf.index,
             index = rdf.index)
         # Write permutation results to file
-        rpdm.to_csv(f"{matrixFile_handle}_permutation_{i}.tsv", sep='\t', encoding='utf-8')
+        rhdm.to_csv(f"{matrixFile_handle}_permutation_{i}.tsv", sep='\t', encoding='utf-8')
         i = i + 1
 
     i = 0
@@ -103,14 +103,14 @@ if args.b is not None:
     while i < args.b:
         # read permutation in as phylogenetic distance matrix
         with open(f"{matrixFile_handle}_permutation_{i}.tsv","r") as src:
-            rpdm_phy = dendropy.PhylogeneticDistanceMatrix.from_csv(
+            rpdm = dendropy.PhylogeneticDistanceMatrix.from_csv(
                     src,
                     is_first_row_column_names=True,
                     is_first_column_row_names=True,
                     is_allow_new_taxa=True,
                     delimiter="\t")
             # calculate neighbor-joining tree from permutation and write to file
-            rnj_tree = rpdm_phy.nj_tree()
+            rnj_tree = rpdm.nj_tree()
             rnj_tree.write(
                 path=f"{treeFile_handle}_permutation_{i}.newick",
                 schema="newick")
