@@ -3,7 +3,8 @@ library(ape)
 library(phangorn)
 library(ggtree)
 
-# This script calculates boostraps from the outputs of the python script "hammingDistanceTree.py"
+# This script calculates boostraps from the outputs of the python script hammingDistanceTree.py:
+# (https://github.com/AbigailShockey/trees/blob/master/python/hammingDistanceTree.py)
 # https://www.biostars.org/p/105010/
 # Repurposed from boot.phylo: https://github.com/cran/ape/blob/0c004ab30b16263e339dd3e4715b8c14bb631fca/R/dist.topo.R
 
