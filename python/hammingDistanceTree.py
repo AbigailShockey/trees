@@ -87,6 +87,8 @@ calc_nj_tree(outMatrix, outTree)
 if args.b is not None:
     # create empty list of trees
     trees = dendropy.TreeList()
+    
+    # begin bootstrapping
     for i in range(1,(args.b + 1)):
         # randomly sample tsv columns with replacement
         rcols = np.random.choice(list(df.columns.values),len(list(df.columns.values)), replace=True)
