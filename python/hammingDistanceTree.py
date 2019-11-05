@@ -14,7 +14,8 @@ import dendropy
 # returns a neihbor-joining tree in newick format
 # The binary gene presence/absence file must have isolates as colnames and genes as rownames; if reverse, use -t option
 # Bootstrapping of the neighbor-joining tree can be performed using -b option
-# Bootstraps must be calculated with a separate script
+# Bootstraps must be calculated from boostrapped trees with a separate script: 
+# (https://github.com/AbigailShockey/trees/blob/master/R/calculateNJBootstraps.R)
 # Based on code from: https://www.drawingfromdata.com/making-a-pdm-distance-matrix-with-pandas
 
 # setup argparser to display help if no arguments
