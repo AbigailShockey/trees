@@ -32,7 +32,6 @@ parser.add_argument('-t', action="store_true", required=False, help="Transpose t
 parser.add_argument('-b', type=int, metavar='bootstrapping', required=False, help="Perform boostrapping n times")
 
 args = parser.parse_args()
-
 def transpose_mat(df,tsvOut):
     tdf = df.transpose()
     tdf.to_csv(tsvOut, sep='\t', encoding='utf-8')
@@ -67,8 +66,8 @@ tsvfile = os.path.abspath(args.tsv)
 prefix = args.prefix
 out = os.getcwd()
 
-# read gene presence/absence tsv
-df = pd.read_csv(tsvfile, sep="\t", index_col=0)
+# read gene presence/absence tsv, treating first column as rownames and first row as column names
+df = pd.read_csv(tsvfile, sep="\t", index_col=0, header=0)
 
 # transpose gene presence/absence tsv and write to file
 if args.t == True:
@@ -86,34 +85,25 @@ outTree = os.path.join(out,f"{prefix}_nj_tree.newick")
 calc_nj_tree(outMatrix, outTree)
 
 if args.b is not None:
-    i = 0
-    while i < args.b:
+    # create empty list of trees
+    trees = dendropy.TreeList()
+    for i in range(1,(args.b + 1)):
         # randomly sample tsv columns with replacement
         rcols = np.random.choice(list(df.columns.values),len(list(df.columns.values)), replace=True)
         rdf = df[rcols]
         # randomly re-order tsv rows (see "jumble" option in boot.phylo function from R package ape)
         rdf = rdf.sample(frac=1, replace=False)
         # permuted hdm name and path
-        n = i + 1
-        outMatrix = os.path.join(out,f"matrix_permutation_{n}.tsv")
+        outMatrix = os.path.join(out,f"matrix_permutation_{i}.tsv")
         # calculate hdm of permuted tsv
         calc_hamming_distance(rdf, outMatrix)
-        i = i + 1
-
-    # create empty list of trees
-    trees = dendropy.TreeList()
-
-    i = 0
-    while i < args.b:
         # permuted nj tree name and path
-        n = i + 1
-        outTree = os.path.join(out,f"tree_permutation_{n}.newick")
+        outTree = os.path.join(out,f"tree_permutation_{i}.newick")
         # calculate nj tree from hdm of permuted tsv
         rnj_tree = calc_nj_tree(outMatrix, outTree)
         # append permuted nj tree
         trees.append(rnj_tree)
-        i = i + 1
-        
+
     # write all permuted nj trees to file
     trees.write(
         path=os.path.join(out,"bootstrapped_nj_trees.newick"),
