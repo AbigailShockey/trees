@@ -1,4 +1,7 @@
+library(ggplot2)
 library(ape)
+library(phangorn)
+library(ggtree)
 
 # This script calculates boostraps from the outputs of the python script "hammingDistanceTree.py"
 # https://www.biostars.org/p/105010/
@@ -37,3 +40,6 @@ bootstraps <- calc.boot.phylo(phy = njtree, boot = boots)
 
 # add boostraps to neighbor joining tree
 njtree$node.labels <- bootstraps
+
+mpt <- midpoint(njtree)
+ggtree(mpt, ladderize = T, alpha = .5) + geom_nodelab(hjust = .5)
