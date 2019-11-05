@@ -113,6 +113,7 @@ if args.b is not None:
         # append permuted nj tree
         trees.append(rnj_tree)
         i = i + 1
+        
     # write all permuted nj trees to file
     trees.write(
         path=os.path.join(out,"bootstrapped_nj_trees.newick"),
