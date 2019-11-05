@@ -13,7 +13,7 @@ import dendropy
 # This script takes a binary gene presence/absence file, calcualtes a pairwise hamming distance matrix and
 # returns a neihbor-joining tree in newick format
 # The binary gene presence/absence file must have isolates as colnames and genes as rownames; if reverse, use -t option
-# Bootstrapping of the neighbor-joining can be performed using -b option
+# Bootstrapping of the neighbor-joining tree can be performed using -b option
 # Bootstraps must be calculated with a separate script
 # Based on code from: https://www.drawingfromdata.com/making-a-pdm-distance-matrix-with-pandas
 
